@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_islami_c10_sun3/home/hadeth/item_hadeth_name.dart';
 import 'package:flutter_app_islami_c10_sun3/my_theme.dart';
+import 'package:flutter_app_islami_c10_sun3/providers/app_config_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HadethTab extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class _HadethTabState extends State<HadethTab> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AppConfigProvider>(context);
     if (hadethList.isEmpty) {
       loadFile();
     }
@@ -20,39 +24,45 @@ class _HadethTabState extends State<HadethTab> {
       children: [
         Center(child: Image.asset('assets/images/hadeth_logo.png')),
         Divider(
-          color: MyTheme.primaryLightColor,
+          color: provider.isDarkMode()
+              ? MyTheme.yellowColor
+              : MyTheme.primaryLightColor,
           thickness: 3,
         ),
         Text(
-          'Hadeth Name',
+          AppLocalizations.of(context)!.hadeth_name,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Divider(
-          color: MyTheme.primaryLightColor,
+          color: provider.isDarkMode()
+              ? MyTheme.yellowColor
+              : MyTheme.primaryLightColor,
           thickness: 3,
         ),
         hadethList.isEmpty
             ? Center(
-                child: CircularProgressIndicator(
-                  color: MyTheme.primaryLightColor,
-                ),
-              )
+          child: CircularProgressIndicator(
+            color: MyTheme.primaryLightColor,
+          ),
+        )
             : Expanded(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: MyTheme.primaryLightColor,
+          child: ListView.separated(
+            separatorBuilder: (context, index) {
+              return Divider(
+                      color: provider.isDarkMode()
+                          ? MyTheme.yellowColor
+                          : MyTheme.primaryLightColor,
                       thickness: 2,
                     );
-                  },
-                  itemBuilder: (context, index) {
-                    return ItemHadethName(
-                      hadeth: hadethList[index],
-                    );
-                  },
-                  itemCount: hadethList.length,
-                ),
-              )
+            },
+            itemBuilder: (context, index) {
+              return ItemHadethName(
+                hadeth: hadethList[index],
+              );
+            },
+            itemCount: hadethList.length,
+          ),
+        )
       ],
     );
   }
